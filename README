@@ -1,0 +1,35 @@
+#
+# README
+#    readme file for nginx-no2id
+#
+#    2010: AMLN McGreggor <adam@no2id.net>
+
+
+INTRO:
+
+    no2id is to be migrating its httpds over to nginx. 
+
+    We're not idiots. We do stuff as root: none of that 'sudo' bollix.
+
+    We're talking about lazy sysadmins, who like scripts to make
+    things easier.
+
+    Hence these.
+
+    These should be checked-out, on each machine, to /root/build, 
+    and from there, run.
+
+
+TO DO:
+    -   auto-discover the latest stable version, and supply that
+        as VERSION;
+
+    -   convert (the once) Apache configs over to nginx
+
+    -   update an audit log, of build, really.
+
+    -   script to check for newer (stable) versions of nginx
+
+FILES:
+    bin/nginx-installer :   download, config, build, and create 
+                            init.d scripts for nginx
