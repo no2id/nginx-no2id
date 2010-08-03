@@ -28,8 +28,16 @@ TO DO:
 
     -   update an audit log, of build, really.
 
-    -   script to check for newer (stable) versions of nginx
-
 FILES:
     bin/nginx-installer :   download, config, build, and create 
                             init.d scripts for nginx
+
+    bin/release-finder  :   look for new releases, rather messily.
+                            note VER at line 15.
+
+    bin/vcheck-nginx    :   wrap-around-script for release-finder; to
+                            be run from cron, most likely
+
+DONE:
+    X   script to check for newer (stable) versions of nginx
+        [ http://github.com/no2id/nginx-no2id/commit/45694f1fc011f02b14e999b74c0549815551d1c0 ]
