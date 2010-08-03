@@ -1,0 +1,66 @@
+#!/bin/bash
+#
+# nginx-installer:
+#     Install nginx.
+#
+# Forked from -- Author : Scott Barr
+# 
+# $Id:$
+
+set -e
+
+if [ -z $1 ]; then
+    echo "Specify a version (q.v. <http://sysoev.ru/nginx/download.html>) as the only arguement"
+    exit 0
+
+else
+    VERSION=$1
+    BASE=/usr/local
+    SRCDIR=${BASE}/src
+ 
+    # check/install 'required' packages
+    for PKG in build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev sysv-rc-conf 
+    do
+        dpkg -l | grep ${PKG} || apt-get install ${PKG}
+    done
+ 
+    cd ${SRCDIR}
+ 
+    if [ -f nginx-${VERSION}.tar.gz ]; then
+        rm nginx-${VERSION}.tar.gz
+    fi
+        wget http://nginx.org/download/nginx-${VERSION}.tar.gz
+ 
+    if [ -d nginx-${VERSION} ]; then 
+        rm -rf nginx-${VERSION}
+    fi
+ 
+    tar -zxf nginx-${VERSION}.tar.gz
+    cd nginx-${VERSION}
+ 
+    ./configure \
+         --sbin-path=/usr/local/sbin \
+         --conf-path=/etc/nginx/nginx.conf \
+         --pid-path=/var/run/nginx.pid \
+         --lock-path=/var/lock/nginx.lock \
+         --http-log-path=/var/log/nginx/access.log \
+         --error-log-path=/var/log/nginx/error.log \
+         --user=nginxd \
+         --group=nginxd \
+         --with-http_ssl_module \
+         --with-http_realip_module \
+         --http-client-body-temp-path=/tmp/nginx_client \
+         --http-proxy-temp-path=/tmp/nginx_proxy \
+         --http-fastcgi-temp-path=/tmp/nginx_fastcgi
+ 
+             # --add-module='/usr/local/src/passenger-2.2.7/ext/nginx'
+ 
+    make && make install clean
+ 
+    wget http://gist.github.com/raw/271062/0c90225766c62009010a8394f3cffc66da9e172a/nginx -O ${SRCDIR}/nginx-init
+    mv ${SRCDIR}/nginx-init /etc/init.d/nginx
+    chmod 755 /etc/init.d/nginx
+ 
+    /etc/init.d/nginx start
+    sysv-rc-conf --level 2345 nginx on
+fi
