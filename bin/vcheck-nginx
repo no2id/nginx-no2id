@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# vcheck-nginx:
+# 	check for new releases to nginx
+#
+# AMLN McGreggor <adam@no2id.net>, 2010
+#
+# $Id:$
+
+set -x
+
+if [ x$1 = x ] ; then
+    echo "Specify the recipient's email address as the only arguement"
+    exit 1
+fi
+
+CODIR=/root/bin/nginx-no2id/bin
+TDIR=${HOME}/tmp
+FILE=${TDIR}/nginxver
+FILE1=${FILE}
+FILE2=${FILE}.new
+SUBJ="A new nginx has been released"
+MAILTO="$1"
+
+if [ ! -d ${HOME}/tmp ]; then
+    mkdir -p ${HOME}/tmp
+fi
+
+# we use wget 'cos it's nice and simple
+./release-finder > ${FILE2}
+
+# and the work's all in here..
+    if [ -e ${FILE1} ] ; then
+        if ! diff ${FILE1} ${FILE2} > /dev/null ; then
+            echo '' 
+            diff -u ${FILE1} ${FILE2} || echo "continue" >/dev/null
+            mv ${FILE2} ${FILE1}
+            mailx -s "${SUBJ}" ${MAILTO} < ${FILE1}
+        else
+            rm ${FILE2}
+        fi
+    else
+        mv ${FILE2} ${FILE1}
+        mailx -s "${SUBJ}" ${MAILTO} < ${FILE1}
+    fi

@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# stable-release-finder:
+#    detail the stable release
+#
+# Copyright (c) 2010 Adam McGreggor. All rights reserved.
+# Email: adam@amyl.org.uk; WWW: http://blog.amyl.org.uk
+#
+# $Id:$
+#
+
+set -e
+
+URI="http://nginx.org/download/"
+VER=0.7
+
+wget -q ${URI} -O- | \
+grep nginx-${VER}.*tar.gz | \
+    sed -e 's/<a href=\"//' -e 's/.tar.gz\">/\t/' \
+    | awk '{print $1}' | grep -v .asc \
+    | sort | tail -n 1
+
