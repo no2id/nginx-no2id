@@ -7,7 +7,7 @@
 #
 # $Id:$
 
-set -x
+set -e
 
 if [ x$1 = x ] ; then
     echo "Specify the recipient's email address as the only arguement"
