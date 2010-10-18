@@ -14,7 +14,7 @@ if [ x$1 = x ] ; then
     exit 1
 fi
 
-CODIR=/root/bin/nginx-no2id/bin
+CODIR=/root/build/nginx-no2id/bin
 TDIR=${HOME}/tmp
 FILE=${TDIR}/nginxver
 FILE1=${FILE}

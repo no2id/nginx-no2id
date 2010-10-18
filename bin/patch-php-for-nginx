@@ -10,8 +10,7 @@
 
 set -e
 
-#CODIR=/root/bin/nginx-no2id
-CODIR=~adam/projects/build/nginx-no2id/
+CODIR=/root/build/nginx-no2id
 
 if ! dpkg -l | grep -q ii.*php5 ; then
     echo "PHP5 not installed, bailing out"
