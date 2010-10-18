@@ -16,11 +16,12 @@ if [ -z $1 ]; then
 
 else
     VERSION=$1
+    CODIR=/root/build/nginx-no2id
     BASE=/usr/local
     SRCDIR=${BASE}/src
  
     # check/install 'required' packages
-    for PKG in build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev sysv-rc-conf autoconf libtool
+    for PKG in build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev sysv-rc-conf autoconf libtool php5-cgi
     do
         dpkg -l | grep ${PKG} || apt-get -y install ${PKG}
     done
@@ -57,13 +58,23 @@ else
              # --add-module='/usr/local/src/passenger-2.2.7/ext/nginx'
  
     make && make install clean
- 
+
+    adduser --disabled-login --home /var/www --shell /bin/false --uid 5555 --gecos "nginxd user,,," nginxd
+
+    # Now patch php.ini files:
+    ${CODIR}/bin/patch-php-for-nginx
+
+    # and give us some init scripts:
     wget http://gist.github.com/raw/271062/0c90225766c62009010a8394f3cffc66da9e172a/nginx -O ${SRCDIR}/nginx-init
     mv ${SRCDIR}/nginx-init /etc/init.d/nginx
     chmod 755 /etc/init.d/nginx
- 
-    adduser --disabled-login --home /var/www --shell /bin/false --uid 5555 --gecos "nginxd user,,," nginxd
+
+    cp ${CODIR}/bin/php-fcgi /etc/init.d/php-fcgi
+    chmod 755 /etc/init.d/php-fcgi
+    update-rc.d php-fcgi defaults
 
     /etc/init.d/nginx start
+    /etc/init.d/php-fcgi start
     sysv-rc-conf --level 2345 nginx on
+
 fi
