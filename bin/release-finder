@@ -18,5 +18,5 @@ wget -q ${URI} -O- | \
 grep nginx-${VER}.*tar.gz | \
     sed -e 's/<a href=\"//' -e 's/.tar.gz\">/\t/' \
     | awk '{print $1}' | grep -v .asc \
-    | sort | tail -n 1
+    | sort | tail -n 1 | sed 's/nginx-//'
 

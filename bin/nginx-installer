@@ -10,7 +10,8 @@
 set -e
 
 if [ -z $1 ]; then
-    echo "Specify a version (q.v. <http://sysoev.ru/nginx/download.html>) as the only arguement"
+    echo "Specify a version (q.v. <http://sysoev.ru/nginx/download.html>) or"
+    echo "execute ./release-finder, and provide that 'answer' as the only arguement"
     exit 0
 
 else
@@ -19,9 +20,9 @@ else
     SRCDIR=${BASE}/src
  
     # check/install 'required' packages
-    for PKG in build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev sysv-rc-conf 
+    for PKG in build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev sysv-rc-conf autoconf libtool
     do
-        dpkg -l | grep ${PKG} || apt-get install ${PKG}
+        dpkg -l | grep ${PKG} || apt-get -y install ${PKG}
     done
  
     cd ${SRCDIR}
@@ -61,6 +62,8 @@ else
     mv ${SRCDIR}/nginx-init /etc/init.d/nginx
     chmod 755 /etc/init.d/nginx
  
+    adduser --disabled-login --home /var/www --shell /bin/false --uid 5555 --gecos "nginxd user,,," nginxd
+
     /etc/init.d/nginx start
     sysv-rc-conf --level 2345 nginx on
 fi
