@@ -22,7 +22,7 @@ INTRO:
 
 TO DO:
     -   auto-discover the latest stable version, and supply that
-        as VERSION (in bin/{nginx-installer,vcheck-nginx});
+        as VERSION (in bin/{nginx-installer,vcheck-nginx}); (maybe)
 
     -   convert (the once) Apache configs over to nginx
 
@@ -55,3 +55,17 @@ FILES:
 DONE:
     X   script to check for newer (stable) versions of nginx
         [ http://github.com/no2id/nginx-no2id/commit/45694f1fc011f02b14e999b74c0549815551d1c0 ]
+
+
+CHECKOUT/PULL:
+    As root, in /root:
+        mkdir build
+        git clone git://github.com/no2id/nginx-no2id.git
+
+    Committers, once you've added your key(s):
+        cd ~/whereever
+        git clone git@github.com:no2id/nginx-no2id.git
+
+    Make changes in your repo, commit, and push, then as root, one may
+        cd /root/build/nginx-no2id && git pull
+    to update.
