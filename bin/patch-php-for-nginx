@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# patch-php-for-nginx
+#    Patch php.ini files to make them nginx-secure
+#    q.v. http://wiki.nginx.org/Pitfalls#Passing_Every_.7E_.5C.php.24_request_to_to_PHP
+#
+# AMLN McGreggor <adam@no2id.net>, 2010
+#
+# $Id:$
+
+set -e
+
+#CODIR=/root/bin/nginx-no2id
+CODIR=~adam/projects/build/nginx-no2id/
+
+if ! dpkg -l | grep -q ii.*php5 ; then
+    echo "PHP5 not installed, bailing out"
+    exit
+fi
+
+if [ ! -x /usr/bin/php5 ] ; then
+    echo "/usr/bin/php5 is not executable. Bailing out"
+    exit
+fi
+
+cd /etc/php5
+# should we check for a .svn dir, here?
+# or even /etc/php5-$HOSTNAME
+patch -p3 < ${CODIR}/patches/php5-cgi.fix_pathinfo.patch
+
+grep -R "cgi.fix_pathinfo=0" /etc/php5/*

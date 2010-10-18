@@ -1,0 +1,24 @@
+diff -rupN /etc/php5/cgi/php.ini /tmp/php5/cgi/php.ini
+--- /etc/php5/cgi/php.ini	2010-10-18 18:08:43.000000000 +0000
++++ /tmp/php5/cgi/php.ini	2010-10-18 18:07:48.000000000 +0000
+@@ -530,7 +530,7 @@ enable_dl = Off
+ ; this to 1 will cause PHP CGI to fix it's paths to conform to the spec.  A setting
+ ; of zero causes PHP to behave as before.  Default is 1.  You should fix your scripts
+ ; to use SCRIPT_FILENAME rather than PATH_TRANSLATED.
+-; cgi.fix_pathinfo=0
++cgi.fix_pathinfo=0
+ 
+ ; FastCGI under IIS (on WINNT based OS) supports the ability to impersonate
+ ; security tokens of the calling client.  This allows IIS to define the
+diff -rupN /etc/php5/cli/php.ini /tmp/php5/cli/php.ini
+--- /etc/php5/cli/php.ini	2010-03-14 08:22:03.000000000 +0000
++++ /tmp/php5/cli/php.ini	2010-10-18 18:09:18.000000000 +0000
+@@ -530,7 +530,7 @@ enable_dl = Off
+ ; this to 1 will cause PHP CGI to fix it's paths to conform to the spec.  A setting
+ ; of zero causes PHP to behave as before.  Default is 1.  You should fix your scripts
+ ; to use SCRIPT_FILENAME rather than PATH_TRANSLATED.
+-; cgi.fix_pathinfo=0
++cgi.fix_pathinfo=0
+ 
+ ; FastCGI under IIS (on WINNT based OS) supports the ability to impersonate
+ ; security tokens of the calling client.  This allows IIS to define the
