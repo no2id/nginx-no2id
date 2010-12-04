@@ -1,0 +1,79 @@
+#!/bin/sh
+#
+# nginx-vhost:
+#    create a config file for an nginx vhost
+#
+# $Id:$
+#
+
+set -x
+
+if [ -z $1 ]; then
+    echo "Specify the vhost as the only arguement"
+    exit 0
+fi
+
+VHOST=${1}
+CONFDIR=/usr/local/etc/nginx/vhosts-enabled-$HOSTNAME
+VHD=/data/vhosts/${VHOST}
+PUBLICADDRESS=`awk '/address/ {print $NF}' /etc/network/interfaces`
+
+echo $VHOST | grep ^www
+if [ ! $? = "0" ]; then
+    VH="www.${VHOST} ${VHOST}"
+else
+    VH=${VHOST}
+fi
+
+if [ ! -d ${CONFDIR} ]; then
+    mkdir -p ${CONFDIR} || echo "Unable to make config directory, bailing"; exit 0
+fi
+
+cat << EOF >> ${CONFDIR}/${VHOST}
+server {
+    server_name                     ${VH};
+    server_name_in_redirect         on;
+
+    root                            ${VHD}/docs/;
+
+    access_log                      ${VHD}/logs/access.log main;
+    error_log                       ${VHD}/logs/error.log error;
+
+    # don't write a "not found" log line:
+    location = /(robots.txt|favicon.ico)$ {
+        log_not_found               off;
+        access_log                  off;
+    }
+
+    location ~* \.(txt|log|README)$ {
+        allow                       localhost;
+        allow                       ${PUBLICADDRESS};
+        deny                        all;
+    }
+
+    location ~ /\.ht {
+        deny                        all;
+    }
+
+    location ~* (CVS|.svn|.git)$ {
+        deny                        all;
+    }
+
+    # serve static files directly
+    location ~* \.(html|css|gif|ico|jpg|jpeg|js|png)$ {
+        root                        ${VHD}/docs;
+        expires                     max;
+        #access_log                 off;
+    }
+                       
+
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_intercept_errors    on;
+        fastcgi_pass                127.0.0.1:9000;
+        fastcgi_param               SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+        fastcgi_param               PATH_INFO \$fastcgi_path_info;
+    }
+}
+EOF
+
