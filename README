@@ -32,6 +32,10 @@ FILES:
     bin/nginx-installer:        download, config, build, and create 
                                 init.d scripts for nginx
 
+    bin/nginx-vhost:            lazily make a generic config file for
+                                a specified vhost, hopefully not doing
+                                Anything Bad.
+
     bin/patch-php-for-nginx:    make PHP 'safer', with nginx. Patch
                                 the /etc/php5/*/php.ini files, per
                                 the patch. With a script, to check &c.
