@@ -6,7 +6,7 @@
 # $Id:$
 #
 
-set -x
+set -e
 
 if [ -z $1 ]; then
     echo "Specify the vhost as the only arguement"
@@ -16,7 +16,7 @@ fi
 VHOST=${1}
 CONFDIR=/usr/local/etc/nginx/vhosts-enabled-$HOSTNAME
 VHD=/data/vhosts/${VHOST}
-PUBLICADDRESS=`awk '/address/ {print $NF}' /etc/network/interfaces`
+PUBLICADDRESS=`awk '/address/ {print $NF}' /etc/network/interfaces | head -n 1`
 
 echo $VHOST | grep ^www
 if [ ! $? = "0" ]; then
@@ -30,6 +30,12 @@ if [ ! -d ${CONFDIR} ]; then
 fi
 
 cat << EOF >> ${CONFDIR}/${VHOST}
+#
+# ${VHOST}:
+#     nginx vhost config for ${VH}
+#
+# \$Id:\$
+
 server {
     server_name                     ${VH};
     server_name_in_redirect         on;
@@ -77,3 +83,8 @@ server {
 }
 EOF
 
+svn add ${CONFDIR}/${VHOST}
+svn propset svn:keywords "Id" ${CONFDIR}/${VHOST}
+svn commit -m"New nginx vhost config : ${VHOST}"
+
+echo "Customize and commit ${CONFDIR}/${VHOST}"
