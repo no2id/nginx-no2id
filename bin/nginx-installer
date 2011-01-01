@@ -31,7 +31,8 @@ else
     if [ -f nginx-${VERSION}.tar.gz ]; then
         rm nginx-${VERSION}.tar.gz
     fi
-        wget http://nginx.org/download/nginx-${VERSION}.tar.gz
+
+    wget http://nginx.org/download/nginx-${VERSION}.tar.gz
  
     if [ -d nginx-${VERSION} ]; then 
         rm -rf nginx-${VERSION}
@@ -69,12 +70,22 @@ else
     mv ${SRCDIR}/nginx-init /etc/init.d/nginx
     chmod 755 /etc/init.d/nginx
 
+    # PHP FCGIs:
     cp ${CODIR}/bin/php-fcgi /etc/init.d/php-fcgi
     chmod 755 /etc/init.d/php-fcgi
     update-rc.d php-fcgi defaults
 
+    # Perl FCGIs:
+    cp ${CODIR}/bin/fastcgi-wrapper /usr/local/bin/perl-fcgi-wrapper
+    chgrp staff /usr/local/bin/perl-fcgi-wrapper
+    chmod 775 /usr/local/bin/perl-fcgi-wrapper
+    cp ${CODIR}/bin/perl-fcgi-wrapper-init /etc/init.d/perl-fcgi-wrapper
+    chmod 755 /etc/init.d/perl-fcgi-wrapper
+    update-rc.d perl-fcgi-wrapper defaults
+
     /etc/init.d/nginx start
     /etc/init.d/php-fcgi start
+    /etc/init.d/perl-fcgi-wrapper start
     sysv-rc-conf --level 2345 nginx on
 
 fi
