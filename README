@@ -29,6 +29,12 @@ TO DO:
     -   update an audit log, of build, really.
 
 FILES:
+    
+    bin/fastcgi-wrapper:        perl wrapper for fastcgi, stolen from
+                                https://library.linode.com/web-servers/nginx/perl-fastcgi/reference/fastcgi-wrapper
+                                rename to perl-fcgi-wrapper, and stow
+                                in /usr/local/bin
+
     bin/nginx-installer:        download, config, build, and create 
                                 init.d scripts for nginx
 
@@ -39,6 +45,12 @@ FILES:
     bin/patch-php-for-nginx:    make PHP 'safer', with nginx. Patch
                                 the /etc/php5/*/php.ini files, per
                                 the patch. With a script, to check &c.
+
+    bin/perl-fcgi-wrapper-init: init.d script to spawn perl as FCGIs;
+                                grab the wrapper from
+                                https://library.linode.com/web-servers/nginx/perl-fastcgi/reference/fastcgi-wrapper
+                                or just from here. Yes the making a
+                                PIDFILE is *horrible*, but it worksish
     
     bin/php-fcgi:               init.d script for spawning php as an
                                 FCGI, based on the Debian skeleton,
