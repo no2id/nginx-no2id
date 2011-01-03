@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # nginx-vhost:
 #    create a config file for an nginx vhost
@@ -14,11 +14,11 @@ if [ -z $1 ]; then
 fi
 
 VHOST=${1}
-CONFDIR=/usr/local/etc/nginx/vhosts-enabled-$HOSTNAME
+CONFDIR=/usr/local/etc/nginx/vhosts-enabled-${HOSTNAME}
 VHD=/data/vhosts/${VHOST}
 PUBLICADDRESS=`awk '/address/ {print $NF}' /etc/network/interfaces | head -n 1`
 
-echo $VHOST | grep ^www
+echo ${VHOST} | grep ^www
 if [ ! $? = "0" ]; then
     VH="www.${VHOST} ${VHOST}"
 else
